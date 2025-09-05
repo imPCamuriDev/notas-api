@@ -2,16 +2,11 @@ package com.pepo.notasapi.Itens;
 
 import com.pepo.notasapi.Usuarios.Usuario;
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "items")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Item {
 
     @Id

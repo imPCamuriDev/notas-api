@@ -22,8 +22,9 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll();
+    public List<UsuarioDTO> listarUsuarios() {
+        List<UsuarioDTO> usuarios = UsuarioMapper.toDTOList(usuarioRepository.findAll());
+        return usuarios;
     }
 
     public UsuarioDTO buscarPorId(Long id) {

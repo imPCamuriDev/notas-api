@@ -12,6 +12,7 @@ public class UsuarioDTO {
 	public UsuarioDTO() {
 		super();
 	}
+	
 	public UsuarioDTO(Long id, String nome, Email email, Boolean emailVerificado) {
 		super();
 		this.id = id;

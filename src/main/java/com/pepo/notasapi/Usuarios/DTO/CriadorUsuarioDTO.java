@@ -1,10 +1,8 @@
 package com.pepo.notasapi.Usuarios.DTO;
 
-import com.pepo.notasapi.ValueObjects.Email;
-
 public class CriadorUsuarioDTO {
     private String nome;
-    private Email email;
+    private String email;
     private String password;
 
 	public String getNome() {
@@ -13,10 +11,10 @@ public class CriadorUsuarioDTO {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public Email getEmail() {
+	public String getEmail() {
 		return email;
 	}
-	public void setEmail(Email email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 	public String getPassword() {
