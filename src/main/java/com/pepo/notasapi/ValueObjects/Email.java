@@ -1,7 +1,16 @@
 package com.pepo.notasapi.ValueObjects;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+
+@Embeddable
+@AttributeOverride(name = "value", column = @Column(name = "email")) // Mapeia o campo 'value' para a coluna 'email' na tabela
 public final class Email {
     private final String value;
+    
+    public Email() { this.value = ""; }
+    
     public Email(String value) { 
     	// Valida emails: deve ter formato "usuario@dominio.extensao" 
     	// com letras, números e alguns símbolos antes do @, 

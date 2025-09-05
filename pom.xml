@@ -42,19 +42,12 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- Testes -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <!-- Lombok -->
-    <dependency>
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+	<dependency>
 	    <groupId>org.projectlombok</groupId>
 	    <artifactId>lombok</artifactId>
-	    <version>1.18.32</version><!--$NO-MVN-MAN-VER$--> <!-- ou a versão mais recente -->
-	    <scope>provided</scope>
+	    <version>1.18.38</version>
 	</dependency>
 
     <!-- H2 Database -->
@@ -70,6 +63,15 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>2.5.0</version>
     </dependency>
+    
+    
+    <!-- Testes -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 
   <build>

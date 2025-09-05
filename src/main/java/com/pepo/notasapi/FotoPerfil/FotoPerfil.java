@@ -22,5 +22,5 @@ public class FotoPerfil {
     private Usuario usuario;
 
     @Lob
-    private byte[] imagem
+    private byte[] imagem;
 }
