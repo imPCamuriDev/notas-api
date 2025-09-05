@@ -51,11 +51,10 @@
 
     <!-- Lombok -->
     <dependency>
-	    <groupId>org.projectlombok</groupId>
-	    <artifactId>lombok</artifactId>
-	    <version>1.18.32</version><!--$NO-MVN-MAN-VER$--> <!-- ou a versão mais recente -->
-	    <scope>provided</scope>
-	</dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
 
     <!-- H2 Database -->
     <dependency>

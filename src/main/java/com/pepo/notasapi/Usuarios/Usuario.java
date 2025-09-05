@@ -1,4 +1,4 @@
-package com.pepo.notasapi.Entities;
+package com.pepo.notasapi.Usuarios;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuariosEntity {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,9 @@ public class UsuariosEntity {
 
     @Column(name = "email_verificado", columnDefinition = "boolean default false")
     private Boolean emailVerificado = false;
+    
+    
+    
 
     // @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     // private FotoPerfilEntities fotoPerfil;
