@@ -12,23 +12,23 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository ur;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        this.ur = usuarioRepository;
     }
 
     public Usuario salvarUsuario(Usuario usuario) {    	
-        return usuarioRepository.save(usuario);
+        return ur.save(usuario);
     }
 
     public List<UsuarioDTO> listarUsuarios() {
-        List<UsuarioDTO> usuarios = UsuarioMapper.toDTOList(usuarioRepository.findAll());
+        List<UsuarioDTO> usuarios = UsuarioMapper.toDTOList(ur.findAll());
         return usuarios;
     }
 
     public UsuarioDTO buscarPorId(Long id) {
-    	Usuario user = usuarioRepository.findById(id)
+    	Usuario user = ur.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return UsuarioMapper.toDTO(user);
     }

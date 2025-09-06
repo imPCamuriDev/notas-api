@@ -16,20 +16,20 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioService us;
 
     public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+        this.us = usuarioService;
     }
 
     @GetMapping
     public List<UsuarioDTO> listarUsuarios() {
-        return usuarioService.listarUsuarios();
+        return us.listarUsuarios();
     }
 
     @GetMapping("/{id}")
     public UsuarioDTO buscarUsuario(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id);
+        return us.buscarPorId(id);
     }
 
     @PostMapping
@@ -44,6 +44,6 @@ public class UsuarioController {
             return null;
         }
 
-        return UsuarioMapper.toDTO(usuarioService.salvarUsuario(user));
+        return UsuarioMapper.toDTO(us.salvarUsuario(user));
     }
 }
