@@ -6,12 +6,12 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 @AttributeOverride(name = "value", column = @Column(name = "email")) // Mapeia o campo 'value' para a coluna 'email' na tabela
-public final class Email {
+public final class EmailVO {
     private final String value;
     
-    public Email() { this.value = ""; }
+    public EmailVO() { this.value = ""; }
     
-    public Email(String value) { 
+    public EmailVO(String value) { 
     	// Valida emails: deve ter formato "usuario@dominio.extensao" 
     	// com letras, números e alguns símbolos antes do @, 
     	// domínio com letras, números, pontos ou hífen, 

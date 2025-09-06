@@ -5,8 +5,8 @@ import com.pepo.notasapi.Usuarios.DTO.CriadorUsuarioDTO;
 import com.pepo.notasapi.Usuarios.DTO.UsuarioDTO;
 import com.pepo.notasapi.Usuarios.Mappers.UsuarioMapper;
 import com.pepo.notasapi.Usuarios.Service.UsuarioService;
-import com.pepo.notasapi.ValueObjects.Email;
-import com.pepo.notasapi.ValueObjects.PasswordHash;
+import com.pepo.notasapi.ValueObjects.EmailVO;
+import com.pepo.notasapi.ValueObjects.PasswordHashVO;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +38,8 @@ public class UsuarioController {
 
         try {
             user.setNome(dto.getNome());
-            user.setEmail(new Email(dto.getEmail()));
-            user.setPassword(new PasswordHash(dto.getPassword()));
+            user.setEmail(new EmailVO(dto.getEmail()));
+            user.setPassword(new PasswordHashVO(dto.getPassword()));
         } catch (IllegalArgumentException e) {
             return null;
         }

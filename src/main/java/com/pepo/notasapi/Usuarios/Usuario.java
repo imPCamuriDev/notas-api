@@ -1,7 +1,7 @@
 package com.pepo.notasapi.Usuarios;
 
-import com.pepo.notasapi.ValueObjects.Email;
-import com.pepo.notasapi.ValueObjects.PasswordHash;
+import com.pepo.notasapi.ValueObjects.EmailVO;
+import com.pepo.notasapi.ValueObjects.PasswordHashVO;
 
 import jakarta.persistence.*;
 
@@ -19,11 +19,11 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     @Embedded
-    private Email email;
+    private EmailVO email;
 
     @Column(nullable = false)
 	@Embedded
-    private PasswordHash password;
+    private PasswordHashVO password;
 
     @Column(name = "email_verificado", columnDefinition = "boolean default false")
     private Boolean emailVerificado = false;
@@ -44,19 +44,19 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public Email getEmail() {
+	public EmailVO getEmail() {
 		return email;
 	}
 
-	public void setEmail(Email email) {
+	public void setEmail(EmailVO email) {
 		this.email = email;
 	}
 
-	public PasswordHash getPassword() {
+	public PasswordHashVO getPassword() {
 		return password;
 	}
 	
-	public void setPassword(PasswordHash password) {
+	public void setPassword(PasswordHashVO password) {
 		this.password = password;
 	}
 

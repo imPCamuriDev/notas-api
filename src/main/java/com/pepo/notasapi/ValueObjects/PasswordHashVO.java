@@ -6,18 +6,18 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 @AttributeOverride(name = "password", column = @Column(name = "password"))
-public final class PasswordHash {
+public final class PasswordHashVO {
     private final String password;
 
-    public PasswordHash() {
+    public PasswordHashVO() {
         this.password = "";
     }
 
-    public PasswordHash(PasswordHash passwordHash) {
+    public PasswordHashVO(PasswordHashVO passwordHash) {
         this.password = passwordHash.getHash();
     }
 
-    public PasswordHash(String rawPassword) {
+    public PasswordHashVO(String rawPassword) {
         if (rawPassword.length() < 6) {
             throw new IllegalArgumentException("Senha muito curta");
         }

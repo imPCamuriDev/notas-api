@@ -1,19 +1,19 @@
 package com.pepo.notasapi.Usuarios.DTO;
 
-import com.pepo.notasapi.ValueObjects.Email;
+import com.pepo.notasapi.ValueObjects.EmailVO;
 
 public class UsuarioDTO {
 
     private Long id;
     private String nome;
-    private Email email;
+    private EmailVO email;
     private Boolean emailVerificado;
     
 	public UsuarioDTO() {
 		super();
 	}
 	
-	public UsuarioDTO(Long id, String nome, Email email, Boolean emailVerificado) {
+	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -38,10 +38,10 @@ public class UsuarioDTO {
 	}
 	
 	//	Email
-	public Email getEmail() {
+	public EmailVO getEmail() {
 		return email;
 	}
-	public void setEmail(Email email) {
+	public void setEmail(EmailVO email) {
 		this.email = email;
 	}
 	
