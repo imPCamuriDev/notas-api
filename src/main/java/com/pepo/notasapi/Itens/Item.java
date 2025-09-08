@@ -1,6 +1,5 @@
 package com.pepo.notasapi.Itens;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pepo.notasapi.Usuarios.Usuario;
 import jakarta.persistence.*;
@@ -23,9 +22,9 @@ public class Item {
 
     private LocalDateTime dataLimite;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-	@JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnore
     private Usuario usuario;
 
 	public Item() {

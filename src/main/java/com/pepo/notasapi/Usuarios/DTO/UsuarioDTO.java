@@ -2,7 +2,7 @@ package com.pepo.notasapi.Usuarios.DTO;
 
 import java.util.List;
 
-import com.pepo.notasapi.Itens.Item;
+import com.pepo.notasapi.Itens.DTO.ItemDTO;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 
 public class UsuarioDTO {
@@ -11,13 +11,13 @@ public class UsuarioDTO {
 	private String nome;
 	private EmailVO email;
 	private Boolean emailVerificado;
-	private List<Item> itens;
+	private List<ItemDTO> itens;
 
 	public UsuarioDTO() {
 		super();
 	}
 
-	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado, List<Item> itens) {
+	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado, List<ItemDTO> itens) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -62,11 +62,11 @@ public class UsuarioDTO {
 		this.emailVerificado = emailVerificado;
 	}
 
-	public List<Item> getItens() {
+	public List<ItemDTO> getItens() {
 		return itens;
 	}
 
-	public void setItens(List<Item> itens) {
+	public void setItens(List<ItemDTO> itens) {
 		this.itens = itens;
 	}
 

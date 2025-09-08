@@ -31,9 +31,7 @@ public class Usuario {
     @Column(name = "email_verificado", columnDefinition = "boolean default false", nullable = false)
     private Boolean emailVerificado = false;
 
-	@Column
-	@JoinColumn(name = "item_id")
-	@OneToMany
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Item> items;
 
 	public Long getId() {

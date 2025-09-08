@@ -13,7 +13,7 @@ public class ItemMapper {
             item.getDescricao(),
             item.getDataCriacao(),
             item.getDataLimite(),
-            item.getUsuario()
+            item.getUsuario().getId()
         );
     }
 
