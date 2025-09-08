@@ -22,8 +22,11 @@ public class ItemServices {
     }
 
     public List<ItemDTO> getItens() {
-        List<ItemDTO> itens = ItemMapper.toDTOList(ir.findAll());
-        return itens;
+        return ItemMapper.toDTOList(ir.findAll());
+    }
+
+    public ItemDTO buscarPorId(Long id) {
+        return ItemMapper.toDTO(ir.findById(id).orElse(null));
     }
 
 }

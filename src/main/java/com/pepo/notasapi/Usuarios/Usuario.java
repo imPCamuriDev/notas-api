@@ -1,5 +1,8 @@
 package com.pepo.notasapi.Usuarios;
 
+import java.util.List;
+
+import com.pepo.notasapi.Itens.Item;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 import com.pepo.notasapi.ValueObjects.PasswordHashVO;
 
@@ -25,8 +28,13 @@ public class Usuario {
 	@Embedded
     private PasswordHashVO password;
 
-    @Column(name = "email_verificado", columnDefinition = "boolean default false")
+    @Column(name = "email_verificado", columnDefinition = "boolean default false", nullable = false)
     private Boolean emailVerificado = false;
+
+	@Column
+	@JoinColumn(name = "item_id")
+	@OneToMany
+	private List<Item> items;
 
 	public Long getId() {
 		return id;
@@ -67,6 +75,16 @@ public class Usuario {
 	public void setEmailVerificado(Boolean emailVerificado) {
 		this.emailVerificado = emailVerificado;
 	}
+
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
+	}
+
+	
     
     
     

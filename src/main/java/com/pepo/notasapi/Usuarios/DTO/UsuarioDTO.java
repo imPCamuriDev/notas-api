@@ -1,58 +1,75 @@
 package com.pepo.notasapi.Usuarios.DTO;
 
+import java.util.List;
+
+import com.pepo.notasapi.Itens.Item;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 
 public class UsuarioDTO {
 
-    private Long id;
-    private String nome;
-    private EmailVO email;
-    private Boolean emailVerificado;
-    
+	private Long id;
+	private String nome;
+	private EmailVO email;
+	private Boolean emailVerificado;
+	private List<Item> itens;
+
 	public UsuarioDTO() {
 		super();
 	}
-	
-	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado) {
+
+	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado, List<Item> itens) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.emailVerificado = emailVerificado;
+		this.itens = itens;
 	}
-	
-	//	ID
+
+	// ID
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	//	Nome
+
+	// Nome
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	//	Email
+
+	// Email
 	public EmailVO getEmail() {
 		return email;
 	}
+
 	public void setEmail(EmailVO email) {
 		this.email = email;
 	}
-	
-	//	Email Verificado
+
+	// Email Verificado
 	public Boolean getEmailVerificado() {
 		return emailVerificado;
 	}
+
 	public void setEmailVerificado(Boolean emailVerificado) {
 		this.emailVerificado = emailVerificado;
 	}
-    
-    
-    
+
+	public List<Item> getItens() {
+		return itens;
+	}
+
+	public void setItens(List<Item> itens) {
+		this.itens = itens;
+	}
+
+	
+
 }

@@ -11,7 +11,8 @@ public class UsuarioMapper {
             usuario.getId(),
             usuario.getNome(),
             usuario.getEmail(),
-            usuario.getEmailVerificado()
+            usuario.getEmailVerificado(),
+            usuario.getItems()
         );
     }
 

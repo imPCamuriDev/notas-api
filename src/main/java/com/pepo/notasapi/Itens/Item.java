@@ -1,5 +1,7 @@
 package com.pepo.notasapi.Itens;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pepo.notasapi.Usuarios.Usuario;
 import jakarta.persistence.*;
 
@@ -23,6 +25,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+	@JsonIgnore
     private Usuario usuario;
 
 	public Item() {
