@@ -32,4 +32,9 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return UsuarioMapper.toDTO(user);
     }
+    
+    public Usuario buscarUsuarioPorId(Long id) {
+        return ur.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
 }

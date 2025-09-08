@@ -2,6 +2,7 @@ package com.pepo.notasapi.Usuarios;
 
 import java.util.List;
 
+import com.pepo.notasapi.FotoPerfil.FotoPerfil;
 import com.pepo.notasapi.Itens.Item;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 import com.pepo.notasapi.ValueObjects.PasswordHashVO;
@@ -33,6 +34,9 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Item> items;
+    
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FotoPerfil fotoPerfil;
 
 	public Long getId() {
 		return id;
@@ -81,15 +85,25 @@ public class Usuario {
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-
 	
-    
-    
-    
+	public FotoPerfil getFotoPerfil() {
+        return fotoPerfil;
+    }
 
-    // @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    // private FotoPerfilEntities fotoPerfil;
+    public void setFotoPerfil(FotoPerfil fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
 
-    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    // private List<ItemsEntities> items;
+    public Long getFotoPerfilId() {
+        return fotoPerfil != null ? fotoPerfil.getId() : null;
+    }
+
+    public String getTipoArquivoFoto() {
+        return fotoPerfil != null ? fotoPerfil.getTipoArquivo() : null;
+    }
+
+    public byte[] getImagemPerfil() {
+        return fotoPerfil != null ? fotoPerfil.getImagem() : null;
+    }
+    
 }
