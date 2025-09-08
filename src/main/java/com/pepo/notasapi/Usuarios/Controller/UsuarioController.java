@@ -8,6 +8,7 @@ import com.pepo.notasapi.Usuarios.Service.UsuarioService;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 import com.pepo.notasapi.ValueObjects.PasswordHashVO;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,4 +47,17 @@ public class UsuarioController {
 
         return UsuarioMapper.toDTO(us.salvarUsuario(user));
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarUsuario(@PathVariable Long id) {
+        try {
+            us.deletarUsuario(id);
+            return ResponseEntity.ok().body("Usuário deletado com sucesso");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+    
 }

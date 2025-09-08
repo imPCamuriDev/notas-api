@@ -11,62 +11,60 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/fotos")
 public class FotoPerfilController {
 
-    private final FotoPerfilService fotoPerfilService;
+	private final FotoPerfilService fotoPerfilService;
 
-    public FotoPerfilController(FotoPerfilService fotoPerfilService) {
-        this.fotoPerfilService = fotoPerfilService;
-    }
+	public FotoPerfilController(FotoPerfilService fotoPerfilService) {
+		this.fotoPerfilService = fotoPerfilService;
+	}
 
-    @PostMapping("/{usuarioId}/base64")
-    public ResponseEntity<String> uploadFotoBase64(
-            @PathVariable Long usuarioId,
-            @RequestBody FotoBase64DTO fotoDTO) {
-        
-        try {
-            if (fotoDTO.getBase64() == null || fotoDTO.getBase64().isEmpty()) {
-                return ResponseEntity.badRequest().body("Base64 é obrigatório");
-            }
+	@PostMapping("/{usuarioId}/base64")
+	public ResponseEntity<String> uploadFotoBase64(@PathVariable Long usuarioId, @RequestBody FotoBase64DTO fotoDTO) {
 
-            fotoPerfilService.salvarBase64(usuarioId, fotoDTO);
-            return ResponseEntity.ok("Foto salva com sucesso");
-            
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao salvar foto: " + e.getMessage());
-        }
-    }
+		try {
+			if (fotoDTO.getBase64() == null || fotoDTO.getBase64().isEmpty()) {
+				return ResponseEntity.badRequest().body("Base64 é obrigatório");
+			}
 
-    @GetMapping("/{usuarioId}/base64")
-    public ResponseEntity<?> downloadFotoBase64(@PathVariable Long usuarioId) {
-        try {
-            String base64 = fotoPerfilService.buscarImagemBase64(usuarioId);
-            
-            FotoPerfil fotoPerfil = fotoPerfilService.buscarPorUsuarioId(usuarioId);
-            
-            FotoBase64DTO response = new FotoBase64DTO(base64, fotoPerfil.getTipoArquivo());
-            return ResponseEntity.ok(response);
-            
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+			fotoPerfilService.salvarBase64(usuarioId, fotoDTO);
+			return ResponseEntity.ok("Foto salva com sucesso");
 
-    @GetMapping(value = "/{usuarioId}/imagem", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> downloadFoto(@PathVariable Long usuarioId) {
-        try {
-            byte[] imagem = fotoPerfilService.buscarImagemBytes(usuarioId);
-            return ResponseEntity.ok(imagem);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Erro ao salvar foto: " + e.getMessage());
+		}
+	}
 
-    @DeleteMapping("/{usuarioId}")
-    public ResponseEntity<String> deletarFoto(@PathVariable Long usuarioId) {
-        try {
-            fotoPerfilService.deletar(usuarioId);
-            return ResponseEntity.ok("Foto deletada");
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	@GetMapping("/{usuarioId}/base64")
+	public ResponseEntity<?> downloadFotoBase64(@PathVariable Long usuarioId) {
+		try {
+			String base64 = fotoPerfilService.buscarImagemBase64(usuarioId);
+
+			FotoPerfil fotoPerfil = fotoPerfilService.buscarPorUsuarioId(usuarioId);
+
+			FotoBase64DTO response = new FotoBase64DTO(base64, fotoPerfil.getTipoArquivo());
+			return ResponseEntity.ok(response);
+
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@GetMapping(value = "/{usuarioId}/imagem", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> downloadFoto(@PathVariable Long usuarioId) {
+		try {
+			byte[] imagem = fotoPerfilService.buscarImagemBytes(usuarioId);
+			return ResponseEntity.ok(imagem);
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
+	@DeleteMapping("/{usuarioId}")
+	public ResponseEntity<String> deletarFoto(@PathVariable Long usuarioId) {
+		try {
+			fotoPerfilService.deletar(usuarioId);
+			return ResponseEntity.ok("Foto deletada");
+		} catch (RuntimeException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 }

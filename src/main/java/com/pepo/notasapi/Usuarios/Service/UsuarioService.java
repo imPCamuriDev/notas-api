@@ -12,29 +12,35 @@ import java.util.List;
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository ur;
+	private final UsuarioRepository ur;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.ur = usuarioRepository;
-    }
+	public UsuarioService(UsuarioRepository usuarioRepository) {
+		this.ur = usuarioRepository;
+	}
 
-    public Usuario salvarUsuario(Usuario usuario) {    	
-        return ur.save(usuario);
-    }
+	public Usuario salvarUsuario(Usuario usuario) {
+		return ur.save(usuario);
+	}
 
-    public List<UsuarioDTO> listarUsuarios() {
-        List<UsuarioDTO> usuarios = UsuarioMapper.toDTOList(ur.findAll());
-        return usuarios;
-    }
+	public List<UsuarioDTO> listarUsuarios() {
+		List<UsuarioDTO> usuarios = UsuarioMapper.toDTOList(ur.findAll());
+		return usuarios;
+	}
 
-    public UsuarioDTO buscarPorId(Long id) {
-    	Usuario user = ur.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        return UsuarioMapper.toDTO(user);
-    }
-    
-    public Usuario buscarUsuarioPorId(Long id) {
-        return ur.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-    }
+	public UsuarioDTO buscarPorId(Long id) {
+		Usuario user = ur.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+		return UsuarioMapper.toDTO(user);
+	}
+
+	public Usuario buscarUsuarioPorId(Long id) {
+		return ur.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+	}
+
+	public void deletarUsuario(Long id) {
+		if (!ur.existsById(id)) {
+			throw new IllegalArgumentException("Usuário com ID " + id + " não encontrado");
+		}
+		ur.deleteById(id);
+	}
+
 }

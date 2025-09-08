@@ -28,5 +28,12 @@ public class ItemServices {
     public ItemDTO buscarPorId(Long id) {
         return ItemMapper.toDTO(ir.findById(id).orElse(null));
     }
+    
+    public void deletarItem(Long id) {
+        if (!ir.existsById(id)) {
+            throw new IllegalArgumentException("Item com ID " + id + " não encontrado");
+        }
+        ir.deleteById(id);
+    }
 
 }

@@ -3,6 +3,7 @@ package com.pepo.notasapi.Itens.Controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,5 +66,18 @@ public class ItemController {
             return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarItem(@PathVariable Long id) {
+        try {
+            is.deletarItem(id);
+            return ResponseEntity.ok().body("Item deletado com sucesso");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
+        }
+    }
+    
 }
 
