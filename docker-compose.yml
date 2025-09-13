@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  # Serviço do MySQL
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # ← ADICIONEI ROOT PASSWORD
+      MYSQL_DATABASE: minha_database
+      MYSQL_USER: meu_usuario
+      MYSQL_PASSWORD: senha123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      app-network:
+        ipv4_address: 172.20.0.2 # ← SINTAXE CORRETA!
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$$MYSQL_ROOT_PASSWORD",
+        ]
+
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pma
+    depends_on:
+      - mysql-db
+    environment:
+      PMA_HOST: 172.20.0.2 # ← USA IP FIXO (remove a linha duplicada)
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    networks:
+      app-network:
+        ipv4_address: 172.20.0.3
+
+  # Serviço da Aplicação Java
+  java-app:
+    build: .
+    container_name: java_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.20.0.2:3306/minha_database?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: meu_usuario
+      SPRING_DATASOURCE_PASSWORD: senha123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - mysql-db
+    networks:
+      app-network:
+        ipv4_address: 172.20.0.4
+
+# Redes e volumes
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
