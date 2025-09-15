@@ -6,7 +6,7 @@ services:
     image: mysql:8.0
     container_name: mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword # ← ADICIONEI ROOT PASSWORD
+      MYSQL_ROOT_PASSWORD: rootpassword 
       MYSQL_DATABASE: minha_database
       MYSQL_USER: meu_usuario
       MYSQL_PASSWORD: senha123
@@ -16,7 +16,7 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       app-network:
-        ipv4_address: 172.20.0.2 # ← SINTAXE CORRETA!
+        ipv4_address: 172.20.0.2 
     healthcheck:
       test:
         [
@@ -38,7 +38,7 @@ services:
     depends_on:
       - mysql-db
     environment:
-      PMA_HOST: 172.20.0.2 # ← USA IP FIXO (remove a linha duplicada)
+      PMA_HOST: 172.20.0.2
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
