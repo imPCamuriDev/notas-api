@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Serviço do MySQL
   mysql-db:
@@ -7,7 +5,7 @@ services:
     container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword 
-      MYSQL_DATABASE: minha_database
+      MYSQL_DATABASE: notasapi
       MYSQL_USER: meu_usuario
       MYSQL_PASSWORD: senha123
     ports:
@@ -54,7 +52,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.20.0.2:3306/minha_database?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.20.0.2:3306/notasapi?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: meu_usuario
       SPRING_DATASOURCE_PASSWORD: senha123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
