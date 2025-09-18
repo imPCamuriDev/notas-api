@@ -52,7 +52,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.20.0.2:3306/notasapi?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/notasapi?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: meu_usuario
       SPRING_DATASOURCE_PASSWORD: senha123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
@@ -73,3 +73,4 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
+
