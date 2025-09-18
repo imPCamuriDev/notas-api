@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     container_name: mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword 
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: notasapi
       MYSQL_USER: meu_usuario
       MYSQL_PASSWORD: senha123
@@ -13,8 +13,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      app-network:
-        ipv4_address: 172.20.0.2 
+      - app-network
     healthcheck:
       test:
         [
@@ -25,9 +24,8 @@ services:
           "localhost",
           "-u",
           "root",
-          "-p$$MYSQL_ROOT_PASSWORD",
+          "-p${MYSQL_ROOT_PASSWORD}",
         ]
-
 
   # phpMyAdmin
   phpmyadmin:
@@ -36,14 +34,13 @@ services:
     depends_on:
       - mysql-db
     environment:
-      PMA_HOST: 172.20.0.2
+      PMA_HOST: mysql-db
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "8081:80"
     networks:
-      app-network:
-        ipv4_address: 172.20.0.3
+      - app-network
 
   # Serviço da Aplicação Java
   java-app:
@@ -59,8 +56,7 @@ services:
     depends_on:
       - mysql-db
     networks:
-      app-network:
-        ipv4_address: 172.20.0.4
+      - app-network
 
 # Redes e volumes
 volumes:
@@ -69,8 +65,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
-
