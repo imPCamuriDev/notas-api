@@ -1,21 +1,16 @@
-FROM openjdk:17-jdk-slim
+FROM ubuntu:22.04 AS build
 
 # Instala o Maven dentro do container
-RUN apt-get update && apt-get install -y maven
-
-# Se não existir, /app é criado
-WORKDIR /app
-
-# Copia todo o projeto para dentro de /app
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
 COPY . .
 
-# Faz a build e executa (instala os dependencias)
-RUN mvn clean package -DskipTests
+RUN apt-get install maven -y
+RUN mvn clean install -DskipTests
 
-# Verificar se o JAR foi gerado corretamente
-RUN ls -l target/
+FROM openjdk:17-jdk-slim
 
-# Expõe o projeto JAVA para a porta 8080
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/notasapi-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /target/notasapi-0.0.1-SNAPSHOT.jar notasapi.jar
+ENTRYPOINT [ "java", "-jar", "notasapi.jar" ]
