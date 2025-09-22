@@ -9,7 +9,6 @@ public class UsuarioDTO {
 	private Long id;
 	private String nome;
 	private EmailVO email;
-	private Boolean emailVerificado;
 	private List<ItemDTO> itens;
 	private FotoPerfilDTO fotoPerfil;
 
