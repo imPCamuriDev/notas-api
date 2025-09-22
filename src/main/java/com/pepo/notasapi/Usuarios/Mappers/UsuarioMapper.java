@@ -16,12 +16,12 @@ public class UsuarioMapper {
 	        dto.setNome(usuario.getNome());
 	        dto.setEmail(usuario.getEmail());
 	        
-	        // Mapear os itens
-	        if (usuario.getItems() != null) {
-	            dto.setItens(usuario.getItems().stream()
-	                .map(ItemMapper::toDTO)
-	                .collect(Collectors.toList()));
-	        }
+	        // // Mapear os itens
+	        // if (usuario.getItems() != null) {
+	        //     dto.setItens(usuario.getItems().stream()
+	        //         .map(ItemMapper::toDTO)
+	        //         .collect(Collectors.toList()));
+	        // }
 	        
 	        if (usuario.getFotoPerfil() != null) {
 	            dto.setFotoPerfil(FotoPerfilMapper.toDTO(usuario.getFotoPerfil()));

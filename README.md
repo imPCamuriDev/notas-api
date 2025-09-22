@@ -1,10 +1,8 @@
-# Java API Service Starter
 
-This is a minimal Java API service starter based on [Google Cloud Run Quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-java-service).
+# JAVA API SPRINGBOOT
+API para o projeto de Notas da Estácio.
+A API Cadastra/Altera/Deleta Usuários e Notas
+A API também já cria o banco automaticamente.
 
-## Getting Started
+(API Online)(https://notas-api-qvzz.onrender.com/swagger-ui/index.html)
 
-Server should run automatically when starting a workspace. To run manually, run:
-```sh
-mvn spring-boot:run
-```

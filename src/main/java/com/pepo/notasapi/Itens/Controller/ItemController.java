@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pepo.notasapi.Exceptions.ErrorResponse;
 import com.pepo.notasapi.Itens.Item;
+import com.pepo.notasapi.Itens.DTO.CriadorDeItens;
 import com.pepo.notasapi.Itens.DTO.ItemDTO;
 import com.pepo.notasapi.Itens.Mappers.ItemMapper;
 import com.pepo.notasapi.Itens.Service.ItemServices;
 import com.pepo.notasapi.Usuarios.Usuario;
 import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.WebRequest;
@@ -41,11 +44,10 @@ public class ItemController {
             return ResponseEntity.ok(itens);
         } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "Erro ao listar itens: " + e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao listar itens: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.internalServerError().body(error);
         }
     }
@@ -57,58 +59,62 @@ public class ItemController {
             return ResponseEntity.ok(item);
         } catch (IllegalArgumentException e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                "Erro ao buscar item: " + e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    "Erro ao buscar item: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> criarItem(@RequestBody ItemDTO dto, WebRequest request) {
+    public ResponseEntity<?> criarItem(@Valid @RequestBody CriadorDeItens dto, WebRequest request) {
         try {
             Item item = new Item();
-            item.setDataCriacao(dto.getDataCriacao());
             item.setDataLimite(dto.getDataLimite());
             item.setDescricao(dto.getDescricao());
 
             Usuario usuario = ur.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário com ID " + dto.getUsuarioId() + " não encontrado"));
-            
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Usuário com ID " + dto.getUsuarioId() + " não encontrado"));
+
             item.setUsuario(usuario);
             Item itemSalvo = is.salvarItem(item);
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(ItemMapper.toDTO(itemSalvo));
-                
+
+            // Converte para o DTO de resposta
+            ItemDTO responseDTO = new ItemDTO(
+                    itemSalvo.getId(),
+                    itemSalvo.getDescricao(),
+                    itemSalvo.getDataCriacao(),
+                    itemSalvo.getDataLimite(),
+                    itemSalvo.getUsuario().getId());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
         } catch (IllegalArgumentException e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Bad Request",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.badRequest().body(error);
         } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                "Erro ao criar item: " + e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao criar item: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarItem(@PathVariable Long id, WebRequest request) {
         try {
@@ -116,19 +122,17 @@ public class ItemController {
             return ResponseEntity.ok().body("Item deletado com sucesso");
         } catch (IllegalArgumentException e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                "Erro ao deletar item: " + e.getMessage(),
-                request.getDescription(false).replace("uri=", "")
-            );
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    "Erro ao deletar item: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }

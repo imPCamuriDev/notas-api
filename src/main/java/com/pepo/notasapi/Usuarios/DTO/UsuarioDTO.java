@@ -9,18 +9,16 @@ public class UsuarioDTO {
 	private Long id;
 	private String nome;
 	private EmailVO email;
-	private List<ItemDTO> itens;
 	private FotoPerfilDTO fotoPerfil;
 
 	public UsuarioDTO() {
 	}
 
-	public UsuarioDTO(Long id, String nome, EmailVO email, List<ItemDTO> itens,
+	public UsuarioDTO(Long id, String nome, EmailVO email,
 			FotoPerfilDTO fotoPerfil) {
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
-		this.itens = itens;
 		this.fotoPerfil = fotoPerfil;
 	}
 
@@ -48,13 +46,13 @@ public class UsuarioDTO {
 		this.email = email;
 	}
 
-	public List<ItemDTO> getItens() {
-		return itens;
-	}
+	// public List<ItemDTO> getItens() {
+	// 	return itens;
+	// }
 
-	public void setItens(List<ItemDTO> itens) {
-		this.itens = itens;
-	}
+	// public void setItens(List<ItemDTO> itens) {
+	// 	this.itens = itens;
+	// }
 
 	public FotoPerfilDTO getFotoPerfil() {
 		return fotoPerfil;

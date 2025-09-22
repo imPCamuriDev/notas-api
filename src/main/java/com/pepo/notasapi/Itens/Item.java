@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name = "items")
 public class Item {
@@ -17,6 +19,7 @@ public class Item {
 	@Column(nullable = false)
     private String descricao;
 
+	@CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime dataCriacao;
 
