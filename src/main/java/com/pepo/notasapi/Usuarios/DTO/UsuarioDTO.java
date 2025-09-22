@@ -16,12 +16,11 @@ public class UsuarioDTO {
 	public UsuarioDTO() {
 	}
 
-	public UsuarioDTO(Long id, String nome, EmailVO email, Boolean emailVerificado, List<ItemDTO> itens,
+	public UsuarioDTO(Long id, String nome, EmailVO email, List<ItemDTO> itens,
 			FotoPerfilDTO fotoPerfil) {
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
-		this.emailVerificado = emailVerificado;
 		this.itens = itens;
 		this.fotoPerfil = fotoPerfil;
 	}
@@ -48,14 +47,6 @@ public class UsuarioDTO {
 
 	public void setEmail(EmailVO email) {
 		this.email = email;
-	}
-
-	public Boolean getEmailVerificado() {
-		return emailVerificado;
-	}
-
-	public void setEmailVerificado(Boolean emailVerificado) {
-		this.emailVerificado = emailVerificado;
 	}
 
 	public List<ItemDTO> getItens() {
