@@ -37,21 +37,6 @@ public class ItemController {
         this.ur = ur;
     }
 
-    @GetMapping
-    public ResponseEntity<?> listarItens(WebRequest request) {
-        try {
-            List<ItemDTO> itens = is.getItens();
-            return ResponseEntity.ok(itens);
-        } catch (Exception e) {
-            ErrorResponse error = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal Server Error",
-                    "Erro ao listar itens: " + e.getMessage(),
-                    request.getDescription(false).replace("uri=", ""));
-            return ResponseEntity.internalServerError().body(error);
-        }
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarItem(@PathVariable Long id, WebRequest request) {
         try {
@@ -71,6 +56,28 @@ public class ItemController {
                     "Erro ao buscar item: " + e.getMessage(),
                     request.getDescription(false).replace("uri=", ""));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<?> buscarItensPorUsuario(@PathVariable Long usuarioId, WebRequest request) {
+        try {
+            List<ItemDTO> itens = is.buscarItensPorUsuarioId(usuarioId);
+            return ResponseEntity.ok(itens);
+        } catch (IllegalArgumentException e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao buscar itens do usuário: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.internalServerError().body(error);
         }
     }
 
