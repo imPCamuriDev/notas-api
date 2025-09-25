@@ -1,5 +1,7 @@
 package com.pepo.notasapi.ValueObjects;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -8,7 +10,7 @@ import jakarta.persistence.Embeddable;
 @AttributeOverride(name = "value", column = @Column(name = "email")) // Mapeia o campo 'value' para a coluna 'email' na tabela
 public final class EmailVO {
     private final String value;
-    
+
     public EmailVO() { this.value = ""; }
     
     public EmailVO(String value) { 
@@ -20,5 +22,6 @@ public final class EmailVO {
             throw new IllegalArgumentException("Email inválido");
         this.value = value;
     }
+    @JsonValue
     public String getValue() { return value; }
 }

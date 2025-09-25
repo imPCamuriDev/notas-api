@@ -1,8 +1,6 @@
 package com.pepo.notasapi.Usuarios.DTO;
 
-import java.util.List;
 import com.pepo.notasapi.FotoPerfil.DTO.FotoPerfilDTO;
-import com.pepo.notasapi.Itens.DTO.ItemDTO;
 import com.pepo.notasapi.ValueObjects.EmailVO;
 
 public class UsuarioDTO {
