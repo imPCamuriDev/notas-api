@@ -4,7 +4,6 @@ public class FotoBase64DTO {
     private String base64;
     private String tipoArquivo;
 
-
     public FotoBase64DTO() {}
 
     public FotoBase64DTO(String base64, String tipoArquivo) {
@@ -12,7 +11,6 @@ public class FotoBase64DTO {
         this.tipoArquivo = tipoArquivo;
     }
 
-    // Getters e Setters
     public String getBase64() {
         return base64;
     }

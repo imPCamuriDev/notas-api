@@ -42,12 +42,13 @@ public class ItemServices {
         }
         ir.deleteById(id);
     }
-
+    
+    @SuppressWarnings("unused")
     public List<ItemDTO> buscarItensPorUsuarioId(Long usuarioId) {
         Usuario usuario = ur.findById(usuarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com ID: " + usuarioId));
         List<Item> itens = ir.findByUsuarioId(usuarioId);
-    
+
         return im.toDTOList(itens);
     }
 

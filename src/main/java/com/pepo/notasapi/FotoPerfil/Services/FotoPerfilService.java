@@ -2,9 +2,10 @@ package com.pepo.notasapi.FotoPerfil.Services;
 
 import com.pepo.notasapi.FotoPerfil.FotoPerfil;
 import com.pepo.notasapi.FotoPerfil.DTO.FotoBase64DTO;
+import com.pepo.notasapi.FotoPerfil.DTO.FotoBinarioDTO;
 import com.pepo.notasapi.FotoPerfil.Repository.FotoPerfilRepository;
 import com.pepo.notasapi.Usuarios.Usuario;
-import com.pepo.notasapi.Usuarios.Service.UsuarioService;
+import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import java.util.Base64;
 
@@ -12,46 +13,67 @@ import java.util.Base64;
 public class FotoPerfilService {
 
     private final FotoPerfilRepository fotoPerfilRepository;
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
-    public FotoPerfilService(FotoPerfilRepository fotoPerfilRepository, UsuarioService usuarioService) {
+    public FotoPerfilService(FotoPerfilRepository fotoPerfilRepository, UsuarioRepository usuarioRepository) {
         this.fotoPerfilRepository = fotoPerfilRepository;
-        this.usuarioService = usuarioService;
-    }
-    
-    public FotoPerfil buscarPorUsuarioId(Long usuarioId) {
-        return fotoPerfilRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Foto não encontrada"));
+        this.usuarioRepository = usuarioRepository;
     }
 
-    public FotoPerfil salvarBase64(Long usuarioId, FotoBase64DTO fotoDTO) {
-        Usuario usuario = usuarioService.buscarUsuarioPorId(usuarioId);
-        
-        byte[] imagemBytes = Base64.getDecoder().decode(fotoDTO.getBase64());
-        
+    // Salvar binário diretamente
+    public void salvarBinario(Long usuarioId, FotoBinarioDTO fotoDTO) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
         FotoPerfil fotoPerfil = fotoPerfilRepository.findByUsuarioId(usuarioId)
                 .orElse(new FotoPerfil());
-        
+
         fotoPerfil.setUsuario(usuario);
-        fotoPerfil.setImagem(imagemBytes);
+        fotoPerfil.setDadosBinarios(fotoDTO.getDadosBinarios());
         fotoPerfil.setTipoArquivo(fotoDTO.getTipoArquivo());
-        
-        return fotoPerfilRepository.save(fotoPerfil);
+
+        fotoPerfilRepository.save(fotoPerfil);
     }
 
-    public String buscarImagemBase64(Long usuarioId) {
-        FotoPerfil fotoPerfil = buscarPorUsuarioId(usuarioId);
-        return Base64.getEncoder().encodeToString(fotoPerfil.getImagem());
+    // Buscar binário
+    public FotoBinarioDTO buscarBinario(Long usuarioId) {
+        FotoPerfil fotoPerfil = fotoPerfilRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada para o usuário: " + usuarioId));
+
+        return new FotoBinarioDTO(fotoPerfil.getDadosBinarios(), fotoPerfil.getTipoArquivo());
     }
 
+    // Método para buscar bytes da imagem (para o endpoint /imagem)
     public byte[] buscarImagemBytes(Long usuarioId) {
-        FotoPerfil fotoPerfil = buscarPorUsuarioId(usuarioId);
-        return fotoPerfil.getImagem();
+        FotoPerfil fotoPerfil = fotoPerfilRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada para o usuário: " + usuarioId));
+
+        return fotoPerfil.getDadosBinarios();
     }
 
+    // Buscar entidade FotoPerfil completa
+    public FotoPerfil buscarPorUsuarioId(Long usuarioId) {
+        return fotoPerfilRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada para o usuário: " + usuarioId));
+    }
+
+    // Verificar se existe foto para o usuário
+    public boolean existeFoto(Long usuarioId) {
+        return fotoPerfilRepository.existsByUsuarioId(usuarioId);
+    }
+
+    // Deletar foto
     public void deletar(Long usuarioId) {
         FotoPerfil fotoPerfil = fotoPerfilRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Foto não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Foto não encontrada para o usuário: " + usuarioId));
         fotoPerfilRepository.delete(fotoPerfil);
+    }
+
+    // Deletar por ID do usuário (alternativo)
+    public void deletarPorUsuarioId(Long usuarioId) {
+        if (!fotoPerfilRepository.existsByUsuarioId(usuarioId)) {
+            throw new RuntimeException("Foto não encontrada para o usuário: " + usuarioId);
+        }
+        fotoPerfilRepository.deleteByUsuarioId(usuarioId);
     }
 }

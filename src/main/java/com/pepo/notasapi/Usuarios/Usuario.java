@@ -103,7 +103,7 @@ public class Usuario {
     }
 
     public byte[] getImagemPerfil() {
-        return fotoPerfil != null ? fotoPerfil.getImagem() : null;
+        return fotoPerfil != null ? fotoPerfil.getDadosBinarios() : null;
     }
     
 }
