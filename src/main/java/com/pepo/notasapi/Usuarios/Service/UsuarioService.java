@@ -4,6 +4,7 @@ import com.pepo.notasapi.Usuarios.Usuario;
 import com.pepo.notasapi.Usuarios.DTO.UsuarioDTO;
 import com.pepo.notasapi.Usuarios.Mappers.UsuarioMapper;
 import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
+import com.pepo.notasapi.ValueObjects.EmailVO;
 
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,10 @@ public class UsuarioService {
 			throw new IllegalArgumentException("Usuário com ID " + id + " não encontrado");
 		}
 		ur.deleteById(id);
+	}
+
+	public boolean existsByEmail(String email) {
+		return ur.findByEmail(new EmailVO(email)).isPresent();
 	}
 
 }

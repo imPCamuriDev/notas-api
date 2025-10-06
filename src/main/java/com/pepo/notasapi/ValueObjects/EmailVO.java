@@ -7,7 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-@AttributeOverride(name = "value", column = @Column(name = "email")) // Mapeia o campo 'value' para a coluna 'email' na tabela
+@AttributeOverride(name = "value", column = @Column(name = "email", unique = true, nullable = false)) // Mapeia o campo 'value' para a coluna 'email' na tabela
 public final class EmailVO {
     private final String value;
 

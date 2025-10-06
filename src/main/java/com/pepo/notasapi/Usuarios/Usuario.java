@@ -11,7 +11,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Usuario {
 
     @Id
@@ -23,6 +23,7 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     @Embedded
+
     private EmailVO email;
 
     @Column(nullable = false)

@@ -70,6 +70,11 @@ public class UsuarioController {
     public ResponseEntity<?> criarUsuario(@RequestBody CriadorUsuarioDTO dto, WebRequest request) {
         try {
             Usuario user = new Usuario();
+
+            if (us.existsByEmail(dto.getEmail())) {
+                throw new IllegalArgumentException("Email já está em uso");
+            }
+
             user.setNome(dto.getNome());
             user.setEmail(new EmailVO(dto.getEmail()));
             user.setPassword(new PasswordHashVO(dto.getPassword()));
