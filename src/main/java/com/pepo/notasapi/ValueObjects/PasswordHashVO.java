@@ -3,6 +3,8 @@ package com.pepo.notasapi.ValueObjects;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Embeddable
 @AttributeOverride(name = "password", column = @Column(name = "password"))
@@ -18,13 +20,37 @@ public final class PasswordHashVO {
     }
 
     public PasswordHashVO(String rawPassword) {
-        if (rawPassword.length() < 6) {
-            throw new IllegalArgumentException("Senha muito curta");
+        List<String> erros = validarSenha(rawPassword);
+        
+        if (!erros.isEmpty()) {
+            throw new IllegalArgumentException("Senha inválida. Requisitos não atendidos: " + String.join(", ", erros));
         }
 
-        else {
-            this.password = Integer.toHexString(rawPassword.hashCode());
+        this.password = Integer.toHexString(rawPassword.hashCode());
+    }
+
+    private List<String> validarSenha(String senha) {
+        List<String> erros = new ArrayList<>();
+        
+        if (senha == null || senha.length() < 8) {
+            erros.add("mínimo de 8 caracteres");
         }
+        
+        if (senha != null) {
+            if (!senha.matches(".*\\d.*")) {
+                erros.add("pelo menos um número");
+            }
+            
+            if (!senha.matches(".*[A-Z].*")) {
+                erros.add("pelo menos uma letra maiúscula");
+            }
+            
+            if (!senha.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+                erros.add("pelo menos um caractere especial");
+            }
+        }
+        
+        return erros;
     }
 
     public String getHash() {
