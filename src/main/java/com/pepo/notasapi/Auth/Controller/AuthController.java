@@ -96,33 +96,33 @@ public class AuthController {
         }
     }
 
-//    @PostMapping("/refresh")
-//    @Operation(summary = "Refresh Token", description = "Renova o token JWT usando refresh token")
-//    public ResponseEntity<?> refreshToken(
-//            @Valid @RequestBody RefreshTokenRequest refreshTokenRequest,
-//            WebRequest request
-//    ) {
-//        try {
-//            AuthResponse response = authService.refreshToken(refreshTokenRequest.getRefreshToken());
-//            return ResponseEntity.ok(response);
-//        } catch (RuntimeException e) {
-//            ErrorResponse error = new ErrorResponse(
-//                    HttpStatus.UNAUTHORIZED.value(),
-//                    "Unauthorized",
-//                    e.getMessage(),
-//                    request.getDescription(false).replace("uri=", "")
-//            );
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-//        } catch (Exception e) {
-//            ErrorResponse error = new ErrorResponse(
-//                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                    "Internal Server Error",
-//                    "Erro ao renovar token: " + e.getMessage(),
-//                    request.getDescription(false).replace("uri=", "")
-//            );
-//            return ResponseEntity.internalServerError().body(error);
-//        }
-//    }
+    @PostMapping("/refresh")
+    @Operation(summary = "Refresh Token", description = "Renova o token JWT usando refresh token")
+    public ResponseEntity<?> refreshToken(
+            @Valid @RequestBody RefreshTokenRequest refreshTokenRequest,
+            WebRequest request
+    ) {
+        try {
+            AuthResponse response = authService.refreshToken(refreshTokenRequest.getRefreshToken());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "Unauthorized",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", "")
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao renovar token: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", "")
+            );
+            return ResponseEntity.internalServerError().body(error);
+        }
+    }
 
     @PostMapping("/logout")
     @Operation(
