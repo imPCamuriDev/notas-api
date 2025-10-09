@@ -15,11 +15,18 @@ import com.pepo.notasapi.Exceptions.ErrorResponse;
 import com.pepo.notasapi.Itens.Item;
 import com.pepo.notasapi.Itens.DTO.CriadorDeItens;
 import com.pepo.notasapi.Itens.DTO.ItemDTO;
-import com.pepo.notasapi.Itens.Mappers.ItemMapper;
 import com.pepo.notasapi.Itens.Service.ItemServices;
 import com.pepo.notasapi.Usuarios.Usuario;
 import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +34,8 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping("/itens")
+@Tag(name = "Itens", description = "Endpoints para gerenciamento de itens/tarefas dos usuários")
+@SecurityRequirement(name = "bearerAuth")
 public class ItemController {
 
     private final ItemServices is;
@@ -38,7 +47,33 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarItem(@PathVariable Long id, WebRequest request) {
+    @Operation(
+            summary = "Buscar item por ID",
+            description = "Retorna os detalhes de um item específico baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Item encontrado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> buscarItem(
+            @Parameter(description = "ID do item a ser buscado", required = true, example = "1")
+            @PathVariable Long id,
+            WebRequest request
+    ) {
         try {
             ItemDTO item = is.buscarPorId(id);
             return ResponseEntity.ok(item);
@@ -60,7 +95,41 @@ public class ItemController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<?> buscarItensPorUsuario(@PathVariable Long usuarioId, WebRequest request) {
+    @Operation(
+            summary = "Buscar itens por usuário",
+            description = "Retorna uma lista com todos os itens pertencentes a um usuário específico"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de itens retornada com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> buscarItensPorUsuario(
+            @Parameter(description = "ID do usuário", required = true, example = "1")
+            @PathVariable Long usuarioId,
+            WebRequest request
+    ) {
         try {
             List<ItemDTO> itens = is.buscarItensPorUsuarioId(usuarioId);
             return ResponseEntity.ok(itens);
@@ -82,7 +151,45 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarItem(@Valid @RequestBody CriadorDeItens dto, WebRequest request) {
+    @Operation(
+            summary = "Criar novo item",
+            description = "Cria um novo item/tarefa associado a um usuário com os dados fornecidos"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Item criado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos ou usuário não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> criarItem(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Dados do item a ser criado",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CriadorDeItens.class))
+            )
+            @Valid @RequestBody CriadorDeItens dto,
+            WebRequest request
+    ) {
         try {
             Item item = new Item();
             item.setDataLimite(dto.getDataLimite());
@@ -95,7 +202,6 @@ public class ItemController {
             item.setUsuario(usuario);
             Item itemSalvo = is.salvarItem(item);
 
-            // Converte para o DTO de resposta
             ItemDTO responseDTO = new ItemDTO(
                     itemSalvo.getId(),
                     itemSalvo.getDescricao(),
@@ -123,7 +229,29 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletarItem(@PathVariable Long id, WebRequest request) {
+    @Operation(
+            summary = "Deletar item",
+            description = "Remove permanentemente um item do sistema baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Item deletado com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> deletarItem(
+            @Parameter(description = "ID do item a ser deletado", required = true, example = "1")
+            @PathVariable Long id,
+            WebRequest request
+    ) {
         try {
             is.deletarItem(id);
             return ResponseEntity.ok().body("Item deletado com sucesso");

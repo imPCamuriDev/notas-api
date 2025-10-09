@@ -1,8 +1,9 @@
 package com.pepo.notasapi.Auth.DTO;
 
 public class AuthResponse {
-    
+
     private String token;
+    private String refreshToken;
     private String type = "Bearer";
     private Long userId;
     private String nome;
@@ -10,6 +11,15 @@ public class AuthResponse {
 
     public AuthResponse() {}
 
+    public AuthResponse(String token, String refreshToken, Long userId, String nome, String email) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+        this.userId = userId;
+        this.nome = nome;
+        this.email = email;
+    }
+
+    // Construtor antigo mantido para compatibilidade
     public AuthResponse(String token, Long userId, String nome, String email) {
         this.token = token;
         this.userId = userId;
@@ -23,6 +33,14 @@ public class AuthResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     public String getType() {
