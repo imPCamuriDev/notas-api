@@ -11,6 +11,7 @@ import com.pepo.notasapi.Auth.DTO.LoginRequest;
 import com.pepo.notasapi.Auth.DTO.RegisterRequest;
 import com.pepo.notasapi.Security.CustomUserDetailsService;
 import com.pepo.notasapi.Security.JWT.JwtUtil;
+import com.pepo.notasapi.Security.JWT.TokenBlacklistService;
 import com.pepo.notasapi.Usuarios.Usuario;
 import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
 import com.pepo.notasapi.ValueObjects.EmailVO;
@@ -23,38 +24,41 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
     private final UsuarioRepository usuarioRepository;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public AuthService(AuthenticationManager authenticationManager, 
-                      JwtUtil jwtUtil,
-                      CustomUserDetailsService userDetailsService,
-                      UsuarioRepository usuarioRepository) {
+    public AuthService(AuthenticationManager authenticationManager,
+                       JwtUtil jwtUtil,
+                       CustomUserDetailsService userDetailsService,
+                       UsuarioRepository usuarioRepository,
+                       TokenBlacklistService tokenBlacklistService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.usuarioRepository = usuarioRepository;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     public AuthResponse authenticate(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getEmail(),
-                    loginRequest.getPassword()
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
             );
 
             Usuario usuario = userDetailsService.loadUserEntityByEmail(loginRequest.getEmail());
-            
+
             String token = jwtUtil.generateToken(
-                usuario.getEmail().getValue(),
-                usuario.getId()
+                    usuario.getEmail().getValue(),
+                    usuario.getId()
             );
 
             return new AuthResponse(
-                token,
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail().getValue()
+                    token,
+                    usuario.getId(),
+                    usuario.getNome(),
+                    usuario.getEmail().getValue()
             );
 
         } catch (AuthenticationException e) {
@@ -80,15 +84,22 @@ public class AuthService {
 
         // Gerar token
         String token = jwtUtil.generateToken(
-            usuario.getEmail().getValue(),
-            usuario.getId()
+                usuario.getEmail().getValue(),
+                usuario.getId()
         );
 
         return new AuthResponse(
-            token,
-            usuario.getId(),
-            usuario.getNome(),
-            usuario.getEmail().getValue()
+                token,
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail().getValue()
         );
+    }
+
+    public void logout(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            tokenBlacklistService.blacklistToken(token);
+        }
     }
 }
