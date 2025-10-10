@@ -11,6 +11,7 @@ public class AuthResponse {
 
     public AuthResponse() {}
 
+    // Construtor completo com refreshToken
     public AuthResponse(String token, String refreshToken, Long userId, String nome, String email) {
         this.token = token;
         this.refreshToken = refreshToken;
@@ -19,7 +20,7 @@ public class AuthResponse {
         this.email = email;
     }
 
-    // Construtor antigo mantido para compatibilidade
+    // Construtor sem refreshToken (compatibilidade)
     public AuthResponse(String token, Long userId, String nome, String email) {
         this.token = token;
         this.userId = userId;

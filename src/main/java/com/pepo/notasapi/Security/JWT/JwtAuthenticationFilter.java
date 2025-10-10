@@ -65,7 +65,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = claims.get("userId", Long.class);
 
                 // IMPORTANTE: Verifica se este é o token ativo do usuário
-                // Se não for, significa que houve um novo login e este token foi invalidado
                 if (userId != null && !activeJwtService.isTokenActive(userId, jwt)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");

@@ -1,6 +1,5 @@
 package com.pepo.notasapi.Security.JWT;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActiveJwtService {
 
-    // Map: userId -> Set de tokens ativos
+    // Map: userId -> token ativo
     private final Map<Long, String> activeTokensByUser = new ConcurrentHashMap<>();
-    
+
     private final JwtUtil jwtUtil;
 
     public ActiveJwtService(JwtUtil jwtUtil) {
@@ -30,6 +29,13 @@ public class ActiveJwtService {
      */
     public void registerActiveToken(Long userId, String token) {
         activeTokensByUser.put(userId, token);
+    }
+
+    /**
+     * Verifica se existe um token ativo registrado para o usuário
+     */
+    public boolean hasActiveToken(Long userId) {
+        return activeTokensByUser.containsKey(userId);
     }
 
     /**

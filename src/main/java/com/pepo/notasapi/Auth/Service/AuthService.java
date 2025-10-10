@@ -74,6 +74,9 @@ public class AuthService {
 
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getId());
 
+            // CRÍTICO: Registra o token ativo após login
+            activeJwtService.registerActiveToken(usuario.getId(), token);
+
             return new AuthResponse(
                     token,
                     refreshToken.getToken(),
@@ -127,6 +130,9 @@ public class AuthService {
             // Gerar refresh token
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getId());
 
+            // CRÍTICO: Registra o token ativo após registro
+            activeJwtService.registerActiveToken(usuario.getId(), token);
+
             return new AuthResponse(
                     token,
                     refreshToken.getToken(),
@@ -159,6 +165,17 @@ public class AuthService {
             throw new IllegalArgumentException("Token vazio");
         }
 
+        // Extrai userId do token e remove do cache de tokens ativos
+        try {
+            Long userId = jwtUtil.extractAllClaims(token).get("userId", Long.class);
+            if (userId != null) {
+                // Remove token ativo
+                activeJwtService.removeActiveToken(userId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Adiciona JWT à blacklist
         tokenBlacklistService.blacklistToken(token);
 
@@ -168,7 +185,7 @@ public class AuthService {
             Usuario usuario = userDetailsService.loadUserEntityByEmail(email);
             refreshTokenService.revokeByUsuario(usuario);
         } catch (Exception e) {
-            // Se não conseguir extrair usuário do token, apenas adiciona à blacklist
+            e.printStackTrace();
         }
     }
 
@@ -179,11 +196,17 @@ public class AuthService {
 
         Usuario usuario = refreshToken.getUsuario();
 
+        // Remove o token JWT antigo do cache de tokens ativos
+        activeJwtService.removeActiveToken(usuario.getId());
+
         // Gera novo JWT
         String newJwtToken = jwtUtil.generateToken(
                 usuario.getEmail().getValue(),
                 usuario.getId()
         );
+
+        // CRÍTICO: Registra o NOVO token como ativo
+        activeJwtService.registerActiveToken(usuario.getId(), newJwtToken);
 
         // Gera novo refresh token
         RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(usuario.getId());
