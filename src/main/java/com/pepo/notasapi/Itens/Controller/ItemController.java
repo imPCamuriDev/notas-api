@@ -35,7 +35,7 @@ import org.springframework.web.context.request.WebRequest;
 @RestController
 @RequestMapping("/itens")
 @Tag(name = "Itens", description = "Endpoints para gerenciamento de itens/tarefas dos usuários")
-@SecurityRequirement(name = "bearerAuth")
+// @SecurityRequirement(name = "bearerAuth")
 public class ItemController {
 
     private final ItemServices is;

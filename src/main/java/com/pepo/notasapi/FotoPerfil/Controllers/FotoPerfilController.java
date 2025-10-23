@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/fotos")
 @Tag(name = "Fotos de Perfil", description = "Endpoints para gerenciamento de fotos de perfil dos usuários")
-@SecurityRequirement(name = "bearerAuth")
+// @SecurityRequirement(name = "bearerAuth")
 public class FotoPerfilController {
 
     private final FotoPerfilService fotoPerfilService;

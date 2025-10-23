@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/usuarios")
 @Tag(name = "Usuários", description = "Endpoints para gerenciamento de usuários")
-@SecurityRequirement(name = "bearerAuth")
+// @SecurityRequirement(name = "bearerAuth")
 public class UsuarioController {
 
     private final UsuarioService us;
