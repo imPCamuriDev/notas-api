@@ -46,6 +46,43 @@ public class ItemController {
         this.ur = ur;
     }
 
+    @GetMapping
+    @Operation(
+            summary = "Buscar todos os itens",
+            description = "Retorna uma lista com todos os itens cadastrados no sistema"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de itens retornada com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> buscarTodosItens(WebRequest request) {
+        try {
+            List<ItemDTO> itens = is.getItens();
+            return ResponseEntity.ok(itens);
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao buscar itens: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
     @GetMapping("/{id}")
     @Operation(
             summary = "Buscar item por ID",
