@@ -36,6 +36,12 @@ public class ItemServices {
         return ItemMapper.toDTO(ir.findById(id).orElse(null));
     }
 
+    public Item buscarItemEntityPorId(Long id) {
+        return ir.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Item com ID " + id + " não encontrado"));
+    }
+
     public void deletarItem(Long id) {
         if (!ir.existsById(id)) {
             throw new IllegalArgumentException("Item com ID " + id + " não encontrado");

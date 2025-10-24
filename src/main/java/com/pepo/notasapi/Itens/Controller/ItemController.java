@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ import com.pepo.notasapi.Exceptions.ErrorResponse;
 import com.pepo.notasapi.Itens.Item;
 import com.pepo.notasapi.Itens.DTO.CriadorDeItens;
 import com.pepo.notasapi.Itens.DTO.ItemDTO;
+import com.pepo.notasapi.Itens.Mappers.ItemMapper;
 import com.pepo.notasapi.Itens.Service.ItemServices;
 import com.pepo.notasapi.Usuarios.Usuario;
 import com.pepo.notasapi.Usuarios.Repositories.UsuarioRepository;
@@ -308,4 +310,101 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
     }
+
+    @PutMapping("/{id}")
+    @Operation(
+            summary = "Editar item",
+            description = "Atualiza os dados de um item existente baseado no ID fornecido"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Item atualizado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item não encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Erro interno do servidor",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    public ResponseEntity<?> editarItem(
+            @Parameter(description = "ID do item a ser editado", required = true, example = "1")
+            @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Novos dados do item",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = CriadorDeItens.class))
+            )
+            @Valid @RequestBody CriadorDeItens dto,
+            WebRequest request
+    ) {
+        try {
+            // Busca o item existente
+            Item itemExistente = is.buscarItemEntityPorId(id);
+            
+            // Atualiza os campos
+            itemExistente.setDescricao(dto.getDescricao());
+            itemExistente.setDataLimite(dto.getDataLimite());
+            
+            // Se o usuário foi alterado, atualiza
+            if (!itemExistente.getUsuario().getId().equals(dto.getUsuarioId())) {
+                Usuario novoUsuario = ur.findById(dto.getUsuarioId())
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Usuário com ID " + dto.getUsuarioId() + " não encontrado"));
+                itemExistente.setUsuario(novoUsuario);
+            }
+            
+            // Salva as alterações
+            Item itemAtualizado = is.salvarItem(itemExistente);
+            
+            ItemDTO responseDTO = new ItemDTO(
+                    itemAtualizado.getId(),
+                    itemAtualizado.getDescricao(),
+                    itemAtualizado.getDataCriacao(),
+                    itemAtualizado.getDataLimite(),
+                    itemAtualizado.getUsuario().getId());
+            
+            return ResponseEntity.ok(responseDTO);
+            
+        } catch (IllegalArgumentException e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.NOT_FOUND.value(),
+                    "Not Found",
+                    e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        } catch (Exception e) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Internal Server Error",
+                    "Erro ao editar item: " + e.getMessage(),
+                    request.getDescription(false).replace("uri=", ""));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+
 }

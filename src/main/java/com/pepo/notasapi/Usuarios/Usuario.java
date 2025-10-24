@@ -27,7 +27,6 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     @Embedded
-
     private EmailVO email;
 
     @Column(nullable = false)

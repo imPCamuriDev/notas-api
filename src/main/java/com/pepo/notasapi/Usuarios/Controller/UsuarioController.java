@@ -37,44 +37,6 @@ public class UsuarioController {
         this.us = usuarioService;
     }
 
-    @GetMapping
-    @Operation(
-            summary = "Listar todos os usuários",
-            description = "Retorna uma lista com todos os usuários cadastrados no sistema"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Lista de usuários retornada com sucesso",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = UsuarioDTO.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Erro interno do servidor",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)
-                    )
-            )
-    })
-    public ResponseEntity<?> listarUsuarios(WebRequest request) {
-        try {
-            List<UsuarioDTO> usuarios = us.listarUsuarios();
-            return ResponseEntity.ok(usuarios);
-        } catch (Exception e) {
-            ErrorResponse error = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "Internal Server Error",
-                    "Erro ao listar usuários: " + e.getMessage(),
-                    request.getDescription(false).replace("uri=", "")
-            );
-            return ResponseEntity.internalServerError().body(error);
-        }
-    }
-
     @GetMapping("/{id}")
     @Operation(
             summary = "Buscar usuário por ID",
